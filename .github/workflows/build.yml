@@ -33,6 +33,10 @@ jobs:
       - name: Create Build Directory
         run: mkdir -p build
 
+      - name: Install Android Build Template
+        run: |
+          godot --headless --install-android-build-template
+
       - name: Export Android APK
         run: |
           godot --headless --export-debug "Android" build/game.apk
