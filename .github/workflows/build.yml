@@ -7,26 +7,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.2.1
     
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
-      - name: Set up Godot 4.7.2
+      - name: Setup Godot
         run: |
-          GODOT_VERSION="4.7.2-stable"
-          
-          # Download Godot Editor Linux Headless & Export Templates
-          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
-          
-          unzip Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
-          
-          # Setup Export Templates (Disesuaikan langsung ke 4.7.2-stable)
-          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}
-          unzip Godot_v${GODOT_VERSION}_export_templates.tpz
-          mv templates/* ~/.local/share/godot/export_templates/${GODOT_VERSION}/
+          mkdir -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/4.2.1.stable ~/.local/share/godot/export_templates/4.7.2.stable/
 
       - name: Create Build Directory
         run: mkdir -p build
