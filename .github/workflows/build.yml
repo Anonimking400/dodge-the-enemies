@@ -1,48 +1,35 @@
-name: Build Godot APK
+name: Build Android APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Godot 4.7.2
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2
+          use-dotnet: false
+
+      - name: Import Project
+        run: godot --headless --editor --quit
+
+      - name: Build APK
         run: |
-          GODOT_VERSION="4.7.2-stable"
-          
-          # Download Godot Editor Linux Headless & Export Templates
-          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
-          
-          unzip Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
-          
-          # Setup Export Templates
-          mkdir -p ~/.local/share/godot/export_templates/4.7.2.stable
-          mkdir -p temp_templates
-          unzip Godot_v${GODOT_VERSION}_export_templates.tpz -d temp_templates
-          find temp_templates -type f -exec mv {} ~/.local/share/godot/export_templates/4.7.2.stable/ \;
-          rm -rf temp_templates
+          mkdir -p build
+          godot --headless --path . --export-debug "Android" build/game.apk
 
-      - name: Create Build Directory
-        run: mkdir -p build
-
-      - name: Install Android Build Template
-        run: |
-          godot --headless --install-android-build-template
-
-      - name: Export Android APK
-        run: |
-          godot --headless --export-debug "Android" build/game.apk
-
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: game-apk
+          name: android-apk
           path: build/game.apk
