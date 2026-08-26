@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://dobmdj5fpkoxv"]
+
+[ext_resource type="Script" uid="uid://b5vtk82h3mv5h" path="res://Scripts/player.gd" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://5nxcgb6k78r8" path="res://Scripts/joystick.gd" id="2_bo1nx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g7b7a"]
+size = Vector2(50, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gyc6d"]
+size = Vector2(720, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6qx4q"]
+size = Vector2(720, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hqkgv"]
+size = Vector2(20, 1280)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrv66"]
+size = Vector2(20, 1280)
+
+[node name="Main" type="Node2D" unique_id=1995998171]
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1129841657]
+position = Vector2(187, 236)
+script = ExtResource("1_jjgbg")
+
+[node name="ColorRect" type="ColorRect" parent="Player" unique_id=1143409988]
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
+color = Color(1, 1, 0.1882353, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1616649388]
+shape = SubResource("RectangleShape2D_g7b7a")
+
+[node name="Walls" type="StaticBody2D" parent="." unique_id=474511259]
+
+[node name="Top" type="CollisionShape2D" parent="Walls" unique_id=695147770]
+position = Vector2(360, 10)
+shape = SubResource("RectangleShape2D_gyc6d")
+
+[node name="Button" type="CollisionShape2D" parent="Walls" unique_id=1192541527]
+position = Vector2(360, 1270)
+shape = SubResource("RectangleShape2D_6qx4q")
+
+[node name="Left" type="CollisionShape2D" parent="Walls" unique_id=1755056215]
+position = Vector2(10, 640)
+shape = SubResource("RectangleShape2D_hqkgv")
+
+[node name="Right" type="CollisionShape2D" parent="Walls" unique_id=1307810798]
+position = Vector2(710, 640)
+shape = SubResource("RectangleShape2D_xrv66")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1763156916]
+
+[node name="Joystick" type="Control" parent="UI" unique_id=1929684914]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = -40.0
+grow_vertical = 0
+script = ExtResource("2_bo1nx")
