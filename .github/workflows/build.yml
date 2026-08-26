@@ -1,0 +1,43 @@
+name: Build Godot APK
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Godot 4.7.2
+        run: |
+          GODOT_VERSION="4.7.2-stable"
+          
+          # Download Godot Editor Linux Headless & Export Templates
+          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          wget https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
+          
+          unzip Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
+          
+          # Setup Export Templates
+          TEMPLATE_FOLDER=$(godot --version | cut -d '.' -f 1-2).0
+          mkdir -p ~/.local/share/godot/export_templates/${TEMPLATE_FOLDER}
+          unzip Godot_v${GODOT_VERSION}_export_templates.tpz
+          mv templates/* ~/.local/share/godot/export_templates/${TEMPLATE_FOLDER}/
+
+      - name: Create Build Directory
+        run: mkdir -p build
+
+      - name: Export Android APK
+        run: |
+          godot --headless --export-debug "Android" build/game.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-apk
+          path: build/game.apk
