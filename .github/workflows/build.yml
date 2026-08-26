@@ -23,11 +23,10 @@ jobs:
           unzip Godot_v${GODOT_VERSION}_linux.x86_64.zip
           sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
           
-          # Setup Export Templates
-          TEMPLATE_FOLDER=$(godot --version | cut -d '.' -f 1-2).0
-          mkdir -p ~/.local/share/godot/export_templates/${TEMPLATE_FOLDER}
+          # Setup Export Templates (Disesuaikan langsung ke 4.7.2-stable)
+          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}
           unzip Godot_v${GODOT_VERSION}_export_templates.tpz
-          mv templates/* ~/.local/share/godot/export_templates/${TEMPLATE_FOLDER}/
+          mv templates/* ~/.local/share/godot/export_templates/${GODOT_VERSION}/
 
       - name: Create Build Directory
         run: mkdir -p build
